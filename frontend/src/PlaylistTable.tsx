@@ -66,9 +66,11 @@ function PlaylistTable() {
   const sortBy = (key: string) => {
     let direction: "asc" | "desc" = "asc";
 
+    console.log("sortconfig direction:", sortConfig.direction);
     if (sortConfig.key === key && sortConfig.direction === "asc") {
       direction = "desc";
     }
+    console.log("direction:", direction);
 
     const sortedData = [...playlists].sort((a, b) => {
       if (a[key] < b[key]) return direction === "asc" ? -1 : 1;

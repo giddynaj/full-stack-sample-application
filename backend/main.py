@@ -54,6 +54,10 @@ async def put_rating(item: Item):
 #    email: EmailStr
 #    full_name: str | None = None
 
+@app.get("/danceability")
+async def get_danceability():
+    results = db.get_danceability()
+    return { "status": "ok", "data": results }
 
 @app.get("/playlists")
 async def get_playlists(
@@ -68,8 +72,5 @@ async def get_playlists(
         df_prep = df.iloc[skip:limit + skip]
         #TODO: Default sort, other sort is implemented client side
         df_prep = df_prep.sort_values(by='title', ascending=True)
-    print('df prep', df_prep)
     df_json = df_prep.to_dict(orient='records')
-    print('df prep', df_prep)
     return { "status": "ok", "title": title, "totalCount": 100, "json": df_json}
-    #return df_json

@@ -2,6 +2,7 @@ import sqlite3
 import json
 import time
 import pandas as pd
+from sqlite3 import Error
 
 DB_FILE= './app.db'
 
@@ -135,3 +136,18 @@ def update_dataframe(item):
     cursor.execute(query, (item.rating, item.id))
     conn.commit()
     conn.close()
+
+def get_danceability():
+    try:
+        cursor, conn = establish_connection()
+        query = "select id, danceability, round(abs(random()) / 9223372036854775807.0 * 0.1, 3) AS value from Playlists;"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.commit()
+        parsed_results = [{"id":result[0], "x": result[1], "y": result[2]} for result in results]
+        return parsed_results
+    except Error as e:
+        print(f"A database error occured {e}")
+    finally:
+        if conn:
+            conn.close()

@@ -18,11 +18,9 @@ app.add_middleware(
 )
 
 db.ensure_db_and_data('Playlists', './playlists.json')
+df = db.load_data_into_df()
 
-#class BaseUser(BaseModel):
-#    username: str
-#    email: EmailStr
-#    full_name: str | None = None
+
 
 @app.get("/")
 async def initialize():
@@ -32,15 +30,30 @@ async def initialize():
 
 # rating, song id
 
-@app.post("/rating")
-async def post_rating():
-    #rating_stars
-    #song_id
+
+class Item(BaseModel):
+    id: str
+    rating: int
+
+@app.put("/ratings")
+async def put_rating(item: Item):
+    db.update_dataframe(item)
+    condition = df['id'] == item.id
+    df.loc[condition, 'ratings'] = item.rating
+    return { "status": "ok"}
+
+
 # add column to playlists called rating type number
 # find the row where id = song_id
 # update row with the rating number in rating column.
 # respond with 200 if successful
 # respond with 4xx with error
+
+#class BaseUser(BaseModel):
+#    username: str
+#    email: EmailStr
+#    full_name: str | None = None
+
 
 @app.get("/playlists")
 async def get_playlists(
@@ -56,7 +69,7 @@ async def get_playlists(
         #TODO: Default sort, other sort is implemented client side
         df_prep = df_prep.sort_values(by='title', ascending=True)
     print('df prep', df_prep)
-    df_json = df_prep.to_json(orient='records')
-    print('df json', df_json)
-    #return { "status": "ok", "title": title, "totalCount": 100, "json": df_json}
-    return df_json
+    df_json = df_prep.to_dict(orient='records')
+    print('df prep', df_prep)
+    return { "status": "ok", "title": title, "totalCount": 100, "json": df_json}
+    #return df_json

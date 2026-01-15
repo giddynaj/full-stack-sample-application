@@ -1,6 +1,7 @@
 import sqlite3
 import json
 import time
+import pandas as pd
 
 DB_FILE= './app.db'
 
@@ -106,7 +107,7 @@ def load_database(json_file, table_name):
 def add_rating_column():
     time.sleep(10)
     cursor, conn = establish_connection()
-    query = "alter table Playlists add ratings int;"
+    query = "alter table Playlists add ratings int default 0;"
     cursor.execute(query)
     conn.commit()
     conn.close()
@@ -119,3 +120,18 @@ def ensure_db_and_data(table_name, json_file):
     if table_exists(cursor, table_name) and not data_exists(table_name):
         print('data exists:', data_exists(table_name))
         load_database(json_file, table_name)
+
+def load_data_into_df():
+    cursor, conn = establish_connection()
+    query = "select * from Playlists"
+    df = pd.read_sql_query(query, conn)
+    conn.close()
+    print('data from df', df)
+    return df
+
+def update_dataframe(item):
+    cursor, conn = establish_connection()
+    query = "update Playlists set ratings = ? where id = ?;"
+    cursor.execute(query, (item.rating, item.id))
+    conn.commit()
+    conn.close()

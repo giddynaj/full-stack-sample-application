@@ -21,6 +21,7 @@ type playlistType = {
   num_sections: number;
   num_segments: number;
   class: number;
+  ratings: number;
 };
 
 function PlaylistTable() {
@@ -29,6 +30,13 @@ function PlaylistTable() {
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 10;
   const [title, setTitle] = useState(null);
+  const [currentRating, setCurrentRating] = useState<{
+    id: string | null;
+    rating: 0 | 1 | 2 | 3 | 4 | 5;
+  }>({
+    id: null,
+    rating: 0,
+  });
   const [sortConfig, setSortConfig] = useState<{
     key: string | null;
     direction: "asc" | "desc";
@@ -36,6 +44,27 @@ function PlaylistTable() {
     key: null,
     direction: "asc",
   });
+
+  useEffect(() => {
+    const setRating = async () => {
+      try {
+        const response = await fetch(`http://localhost:8000/ratings`, {
+          method: "PUT", // Specify the method
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(currentRating),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update ratings");
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        //
+      }
+    };
+    setRating();
+  }, [currentRating]);
 
   useEffect(() => {
     const fetchPlaylists = async () => {
@@ -48,7 +77,7 @@ function PlaylistTable() {
           throw new Error("Failed to fetch playlists");
         }
         const data = await response.json();
-        const parsed = JSON.parse(data.json);
+        const parsed = data.json;
         const rawTotalPages = Math.floor((data.totalCount ?? 1) / pageSize);
         setTotalPages(rawTotalPages);
         setPlayLists(parsed);
@@ -82,6 +111,18 @@ function PlaylistTable() {
     setPlayLists(sortedData);
   };
 
+  const handleRatings = (ratings: any, userId: any) => {
+    let updatedRatings: any = structuredClone(playlists);
+
+    for (let idx = 0; idx < playlists.length; idx++) {
+      if (updatedRatings[idx].id === userId) {
+        updatedRatings[idx].ratings = ratings;
+      }
+    }
+    setCurrentRating({ id: userId, rating: ratings });
+    setPlayLists(updatedRatings);
+  };
+
   return (
     <>
       <table>
@@ -105,6 +146,7 @@ function PlaylistTable() {
             <th onClick={() => sortBy("num_sections")}>Number Sections</th>
             <th onClick={() => sortBy("num_segments")}>Number Segments</th>
             <th onClick={() => sortBy("class")}>Class</th>
+            <th onClick={() => sortBy("ratings")}>Ratings</th>
           </tr>
         </thead>
         <tbody>
@@ -128,6 +170,38 @@ function PlaylistTable() {
               <td>{playlist.num_sections}</td>
               <td>{playlist.num_segments}</td>
               <td>{playlist.class}</td>
+              <td style={{ marginRight: 5 }}>
+                <span
+                  style={{ marginRight: "5px" }}
+                  onClick={() => handleRatings(1, playlist.id)}
+                >
+                  {playlist.ratings >= 1 ? "X" : "0"}
+                </span>
+                <span
+                  style={{ marginRight: "5px" }}
+                  onClick={() => handleRatings(2, playlist.id)}
+                >
+                  {playlist.ratings >= 2 ? "X" : "0"}
+                </span>
+                <span
+                  style={{ marginRight: "5px" }}
+                  onClick={() => handleRatings(3, playlist.id)}
+                >
+                  {playlist.ratings >= 3 ? "X" : "0"}
+                </span>
+                <span
+                  style={{ marginRight: "5px" }}
+                  onClick={() => handleRatings(4, playlist.id)}
+                >
+                  {playlist.ratings >= 4 ? "X" : "0"}
+                </span>
+                <span
+                  style={{ marginRight: "5px" }}
+                  onClick={() => handleRatings(5, playlist.id)}
+                >
+                  {playlist.ratings >= 5 ? "X" : "0"}
+                </span>
+              </td>
             </tr>
           ))}
         </tbody>

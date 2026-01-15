@@ -54,6 +54,17 @@ async def put_rating(item: Item):
 #    email: EmailStr
 #    full_name: str | None = None
 
+@app.get("/acousticness-tempo")
+async def get_acoustics_tempo():
+    results = db.get_acoustics_tempo()
+    return { "status": "ok", "data": results }
+
+@app.get("/duration")
+async def get_duration():
+    results = db.get_duration()
+    return { "status": "ok", "data": results }
+
+
 @app.get("/danceability")
 async def get_danceability():
     results = db.get_danceability()

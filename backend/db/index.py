@@ -151,3 +151,33 @@ def get_danceability():
     finally:
         if conn:
             conn.close()
+
+def get_duration():
+    try:
+        cursor, conn = establish_connection()
+        query = "select id, duration_ms from Playlists;"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.commit()
+        parsed_results = [{"id":result[0], "duration_ms": result[1]} for result in results]
+        return parsed_results
+    except Error as e:
+        print(f"A database error occured {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def get_acoustics_tempo():
+    try:
+        cursor, conn = establish_connection()
+        query = "select id, acousticness, tempo from Playlists;"
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.commit()
+        parsed_results = [{"id":result[0], "acousticness": result[1], "tempo": result[2]} for result in results]
+        return parsed_results
+    except Error as e:
+        print(f"A database error occured {e}")
+    finally:
+        if conn:
+            conn.close()

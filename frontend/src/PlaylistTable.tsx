@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import PaginatedBlock from "./PaginationBlock";
 import PlaylistSearch from "./PlaylistSearch";
-
+import DownloadStateAsCsv from "./Download";
 type playlistType = {
   id: string;
   title: string;
@@ -127,6 +127,7 @@ function PlaylistTable() {
     <>
       <PaginatedBlock page={page} totalpages={totalPages} setpage={setPage} />
       <PlaylistSearch settitle={setTitle} title={title} />
+      <DownloadStateAsCsv playlists={playlists} />
       <table>
         <thead>
           <tr>

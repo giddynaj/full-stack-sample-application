@@ -7,6 +7,7 @@ import Header from "./Header.tsx";
 import Danceability from "./Danceability";
 import Acoustic from "./Acoustic.tsx";
 import DurationChart from "./Duration.tsx";
+import DownloadStateAsCsv from "./Download.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
@@ -15,7 +16,6 @@ createRoot(document.getElementById("root")!).render(
         <Route path="/playlists" element={<Playlists />} />
         <Route path="/danceability" element={<Danceability />} />
         <Route path="/duration" element={<DurationChart />} />
-        */
         <Route path="/acoustic" element={<Acoustic />} />
       </Routes>
     </BrowserRouter>

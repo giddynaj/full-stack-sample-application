@@ -9,7 +9,7 @@ export default function PaginatedBlock(props: any) {
   //const [error, , setError] = useState("");
 
   return (
-    <div>
+    <div style={{ display: "inline-block" }}>
       {loading && <p>Loading...</p>}
 
       <div style={{ display: "flex", gap: 8, alignItems: "center" }}>

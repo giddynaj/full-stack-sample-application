@@ -37,8 +37,8 @@ function Danceability() {
       <DanceabiltyChart
         data={danceabilityData}
         margin={5}
-        width={100}
-        height={100}
+        width={500}
+        height={300}
       />
     </>
   );

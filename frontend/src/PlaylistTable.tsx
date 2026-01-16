@@ -125,6 +125,8 @@ function PlaylistTable() {
 
   return (
     <>
+      <PaginatedBlock page={page} totalpages={totalPages} setpage={setPage} />
+      <PlaylistSearch settitle={setTitle} title={title} />
       <table>
         <thead>
           <tr>
@@ -206,8 +208,6 @@ function PlaylistTable() {
           ))}
         </tbody>
       </table>
-      <PaginatedBlock page={page} totalpages={totalPages} setpage={setPage} />
-      <PlaylistSearch settitle={setTitle} title={title} />
     </>
   );
 }

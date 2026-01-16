@@ -159,7 +159,7 @@ def get_duration():
         cursor.execute(query)
         results = cursor.fetchall()
         conn.commit()
-        parsed_results = [{"id":result[0], "duration_ms": result[1]} for result in results]
+        parsed_results = [{"id":result[0], "duration": result[1]} for result in results]
         return parsed_results
     except Error as e:
         print(f"A database error occured {e}")
@@ -167,14 +167,34 @@ def get_duration():
         if conn:
             conn.close()
 
-def get_acoustics_tempo():
+def get_acoustic():
     try:
         cursor, conn = establish_connection()
         query = "select id, acousticness, tempo from Playlists;"
         cursor.execute(query)
         results = cursor.fetchall()
         conn.commit()
-        parsed_results = [{"id":result[0], "acousticness": result[1], "tempo": result[2]} for result in results]
+        parsed_results = [{"a": result[1], "b": result[2]} for result in results]
+        return parsed_results
+    except Error as e:
+        print(f"A database error occured {e}")
+    finally:
+        if conn:
+            conn.close()
+
+def get_duration_bar():
+    try:
+        cursor, conn = establish_connection()
+        query = f"""
+        select 'label_' || ROW_NUMBER() OVER () AS label,
+        floor(random() * 100) + 1 AS value
+        from Playlists limit 5;
+        """
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+        conn.commit()
+        parsed_results = [{"name": result[0], "value": result[1]} for result in results]
         return parsed_results
     except Error as e:
         print(f"A database error occured {e}")

@@ -94,7 +94,7 @@ type PlaylistTableProps = {
   playlists: UserRow[]; // or whatever your type is
 };
 
-export default function DownloadStateAsCsv({ playlists }: PlaylistTableProps) {
+const DownloadStateAsCsv = ({ playlists }: PlaylistTableProps) => {
   const [rows, setRows] = useState<UserRow[]>(playlists);
   const csv = useMemo(() => rowsToCsv(rows as any), [rows]);
 
@@ -113,4 +113,6 @@ export default function DownloadStateAsCsv({ playlists }: PlaylistTableProps) {
       </button>
     </div>
   );
-}
+};
+
+export default DownloadStateAsCsv;

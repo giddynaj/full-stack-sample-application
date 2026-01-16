@@ -1,8 +1,10 @@
 import sqlite3
+from fastapi import HTTPException
 import json
 import time
 import pandas as pd
 from sqlite3 import Error
+#import psycopg2
 
 DB_FILE= './app.db'
 
@@ -130,10 +132,16 @@ def load_data_into_df():
     print('data from df', df)
     return df
 
-def update_dataframe(item):
-    cursor, conn = establish_connection()
-    query = "update Playlists set ratings = ? where id = ?;"
-    cursor.execute(query, (item.rating, item.id))
+def update_rating_db(item):
+    try:
+        cursor, conn = establish_connection()
+        query = "update Playlists set ratings = ? where id = ?;"
+        cursor.execute(query, (item.rating, item.id))
+    except Error as e:
+        raise HTTPException(
+            status_code=500,
+            detail="Failed updating ratings"
+        )
     conn.commit()
     conn.close()
 

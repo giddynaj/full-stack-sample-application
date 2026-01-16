@@ -37,7 +37,7 @@ class Item(BaseModel):
 
 @app.put("/ratings")
 async def put_rating(item: Item):
-    db.update_dataframe(item)
+    db.update_rating_db(item)
     condition = df['id'] == item.id
     df.loc[condition, 'ratings'] = item.rating
     return { "status": "ok"}

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, Depends, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
@@ -81,7 +81,8 @@ async def get_playlists(
     page: int | None = 1
 ):
     if (title):
-        df_prep = df[df['title'] == title]
+        #df_prep = df[df['title'] == title]
+        df_prep = df[df['title'].str.contains(title, case=False)]
     else:
         skip = (page - 1) * 10
         df_prep = df.iloc[skip:limit + skip]

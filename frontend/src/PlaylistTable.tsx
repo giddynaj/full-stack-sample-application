@@ -35,7 +35,7 @@ function PlaylistTable() {
     id: string | null;
     rating: 0 | 1 | 2 | 3 | 4 | 5;
   }>({
-    id: null,
+    id: "",
     rating: 0,
   });
   const [sortConfig, setSortConfig] = useState<{

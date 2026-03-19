@@ -195,7 +195,7 @@ def get_duration_bar():
         cursor, conn = establish_connection()
         query = f"""
         select 'label_' || ROW_NUMBER() OVER () AS label,
-        floor(random() * 100) + 1 AS value
+        abs(floor(random() * 100) + 1) AS value
         from Playlists limit 5;
         """
 

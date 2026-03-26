@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import PaginatedBlock from "./PaginationBlock";
 import PlaylistSearch from "./PlaylistSearch";
 import DownloadStateAsCsv from "./Download";
+import { sortPlaylistsByKey, SortConfig } from "./sortPlaylists/sortPlaylists";
 
 type playlistType = {
   id: string;
@@ -38,11 +39,8 @@ function PlaylistTable() {
     id: "",
     rating: 0,
   });
-  const [sortConfig, setSortConfig] = useState<{
-    key: string | null;
-    direction: "asc" | "desc";
-  }>({
-    key: null,
+  const [sortConfig, setSortConfig] = useState<SortConfig>({
+    key: "",
     direction: "asc",
   });
 
@@ -92,23 +90,13 @@ function PlaylistTable() {
 
   //if (loading) return <p>Loading...</p>
 
-  //Factor out to separate module
   const sortBy = (key: string) => {
-    let direction: "asc" | "desc" = "asc";
-
-    console.log("sortconfig direction:", sortConfig.direction);
-    if (sortConfig.key === key && sortConfig.direction === "asc") {
-      direction = "desc";
-    }
-    console.log("direction:", direction);
-
-    const sortedData = [...playlists].sort((a, b) => {
-      if (a[key] < b[key]) return direction === "asc" ? -1 : 1;
-      if (a[key] > b[key]) return direction === "asc" ? 1 : -1;
-      return 0;
-    });
-
-    setSortConfig({ key, direction });
+    const { sortedData, nextSortConfig } = sortPlaylistsByKey(
+      playlists,
+      key,
+      sortConfig
+    );
+    setSortConfig(nextSortConfig);
     setPlayLists(sortedData);
   };
 

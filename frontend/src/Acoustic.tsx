@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
+import { useFetchData } from "./useFetchData";
 import {
   ResponsiveContainer,
   BarChart,
@@ -95,41 +96,10 @@ type rowsType = {
 };
 
 export default function FetchedHistogram() {
-  const [rows, setRows] = useState<rowsType[]>([]); // fetched data
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function load() {
-      try {
-        setLoading(true);
-        setError("");
-
-        // Example endpoint: replace with yours
-        const res = await fetch("http://localhost:8000/acoustic", {
-          signal: controller.signal,
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        // Expecting json like: [{ a: 12.3, b: 9.8 }, ...]
-        const parsed = json.data;
-        setRows(Array.isArray(parsed) ? parsed : []);
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === "AbortError") {
-          console.log("Operation was cancelled."); // Ignore or handle as needed
-        } else {
-          console.error(err); // Handle genuine errors
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    load();
-    return () => controller.abort();
-  }, []);
+  const { data, loading, error } = useFetchData<rowsType[]>(
+    "http://localhost:8000/acoustic"
+  );
+  const rows = data ?? [];
 
   // Convert fetched rows -> two numeric arrays
   const seriesA = useMemo(

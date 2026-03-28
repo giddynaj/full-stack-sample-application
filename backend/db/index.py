@@ -1,7 +1,6 @@
 import sqlite3
 from fastapi import HTTPException
 import json
-import time
 import pandas as pd
 from sqlite3 import Error
 #import psycopg2
@@ -52,12 +51,12 @@ def create_table(table_name, json_file):
             """
         # Create table (adjust data types as needed, TEXT is versatile)
         cursor.execute(create_table_sql)
-        conn.commit
-        conn.close
+        conn.commit()
+        conn.close()
 
 def data_exists(table_name):
     cursor, conn = establish_connection()
-    query = "select count(*) from Playlists"
+    query = f"select count(*) from {table_name}"
     print('query', query)
     cursor.execute(query)
     result = cursor.fetchone()
@@ -108,7 +107,6 @@ def load_database(json_file, table_name):
     return { "status":"200", "message":"Table does not exist"}
 
 def add_rating_column():
-    time.sleep(10)
     cursor, conn = establish_connection()
     query = "alter table Playlists add ratings int default 0;"
     cursor.execute(query)

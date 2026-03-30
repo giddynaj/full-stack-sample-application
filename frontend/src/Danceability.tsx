@@ -1,5 +1,6 @@
 import DanceabiltyChart from "./DanceabilityChart";
 import { useFetchData } from "./useFetchData";
+import { API_BASE_URL } from "./config";
 
 type SampleDataPoint = {
   id: string;
@@ -9,7 +10,7 @@ type SampleDataPoint = {
 
 function Danceability() {
   const { data: danceabilityData } = useFetchData<SampleDataPoint[]>(
-    "http://localhost:8000/danceability"
+    `${API_BASE_URL}/danceability`
   );
 
   return (

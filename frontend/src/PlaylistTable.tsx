@@ -3,6 +3,7 @@ import PaginatedBlock from "./PaginationBlock";
 import PlaylistSearch from "./PlaylistSearch";
 import DownloadStateAsCsv from "./Download";
 import { sortPlaylistsByKey, SortConfig } from "./sortPlaylists/sortPlaylists";
+import { API_BASE_URL } from "./config";
 
 type playlistType = {
   id: string;
@@ -47,7 +48,7 @@ function PlaylistTable() {
   useEffect(() => {
     const setRating = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/ratings`, {
+        const response = await fetch(`${API_BASE_URL}/ratings`, {
           method: "PUT", // Specify the method
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(currentRating),
@@ -70,7 +71,7 @@ function PlaylistTable() {
       try {
         const titleFrag = title ? `&title=${title}` : "";
         const response = await fetch(
-          `http://localhost:8000/playlists?page=${page}${titleFrag}`
+          `${API_BASE_URL}/playlists?page=${page}${titleFrag}`
         );
         if (!response.ok) {
           throw new Error("Failed to fetch playlists");

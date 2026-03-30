@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import { useFetchData } from "./useFetchData";
+import { API_BASE_URL } from "./config";
 import {
   ResponsiveContainer,
   BarChart,
@@ -97,7 +98,7 @@ type rowsType = {
 
 export default function FetchedHistogram() {
   const { data, loading, error } = useFetchData<rowsType[]>(
-    "http://localhost:8000/acoustic"
+    `${API_BASE_URL}/acoustic`
   );
   const rows = data ?? [];
 

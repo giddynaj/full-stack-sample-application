@@ -9,6 +9,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { useFetchData } from "./useFetchData";
+import { API_BASE_URL } from "./config";
 
 type Row = {
   name: string;
@@ -17,7 +18,7 @@ type Row = {
 
 export default function DurationChart() {
   const { data: durationData } = useFetchData<Row[]>(
-    "http://localhost:8000/duration-bar"
+    `${API_BASE_URL}/duration-bar`
   );
 
   return (
